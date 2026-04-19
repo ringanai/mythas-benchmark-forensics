@@ -1,0 +1,159 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "hors ancrage",
+    "justification": "Pilote sans run convertissant `fiches/MATH.md` en instance JSON v0.5. Second cas `math_verifiable` apres GSM8K, mais sur difficulte competition (AMC/AIME/Olympiad) avec format reponse canonique `\\boxed{...}`. La notation v0.5 des 6 dimensions fait sortir `inutilisable` (s=0, zeros=6) alors que la fiche markdown de tete est encore classee `compromis` (audit anterieur aux seuils v0.5): divergence a tracer, meme motif que MMLU / HumanEval / SWE-bench / GSM8K avant propagation. Aucun ancrage Mythas possible: dataset public depuis 2021-03, solutions detaillees completes exposees, aucune gouvernance."
+  },
+  "identity": {
+    "benchmark": {"value": "MATH", "evidence": "prouve"},
+    "version_release": {"value": "MATH (Hendrycks et al., 2021-03, arXiv 2103.03874, github.com/hendrycks/math)", "evidence": "prouve"},
+    "subset_split": {"value": "12,500 problemes au total; 7,500 train / 5,000 test dans le repo officiel; 7 categories (Algebra, Counting & Probability, Geometry, Intermediate Algebra, Number Theory, Prealgebra, Precalculus); 5 niveaux de difficulte; subsets derives publics type MATH-500 (Lightman et al.) reutilises par OpenAI PRM800K", "evidence": "prouve"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false,
+    "scaffold_description": null
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {"value": "pas de harness officiel unique; reimplementations courantes: EleutherAI lm-eval-harness (`hendrycks_math`, `minerva_math`), scripts OpenAI PRM800K, scripts Minerva / Lean-reproduction, harness maison avec verifier latex", "evidence": "prouve"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": "generation texte libre, extraction de la reponse finale dans `\\boxed{...}`; certaines pipelines utilisent sympy pour normaliser les expressions, d'autres un LLM-judge", "evidence": "prouve"},
+    "timeouts_retries_batch": {"value": "variables selon reimplementation; greedy decode vs self-consistency (Wang et al.) vs best-of-n avec process reward model (Lightman et al., PRM800K) changent dramatiquement les budgets et les scores", "evidence": "prouve"}
+  },
+  "prompt_regime": {
+    "template": {"value": "pas de template unique impose; variantes observees: 0-shot direct, few-shot (typiquement 4 exemples style Minerva), CoT explicite `Let's think step by step`, prompts Minerva avec exemples LaTeX, formats `Answer: \\boxed{...}`; chaque variante change le score", "evidence": "prouve"},
+    "shots": {"value": "variable (0, 4, 8 shots les plus courants; Minerva standardise 4-shot)", "evidence": "prouve"},
+    "cot_status": "free",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "non applicable (reponse ouverte en expression mathematique, pas de MCQ)", "evidence": "prouve"},
+    "prompt_sensitivity": {
+      "status": "declaree non mesuree",
+      "value": null
+    }
+  },
+  "scoring": {
+    "metric": {"value": "accuracy sur la reponse finale extraite de `\\boxed{...}`; 0/1 par item apres normalisation LaTeX; accuracy moyenne sur les 5000 items test (ou subset MATH-500)", "evidence": "prouve"},
+    "final_parser": {"value": "extraction de la derniere occurrence de `\\boxed{...}` dans la sortie modele, puis normalisation (sympy.simplify, strip de `\\left` / `\\right`, fraction canonique, tolerance sur ordre de facteurs); variantes non canoniques (equivalence symbolique vs string match strict)", "evidence": "prouve"},
+    "post_processing": {"value": "en mode paper original: generation unique; en mode Minerva: majority voting sur n=64 samples; en mode PRM800K: best-of-n guide par un process reward model entraine separement; en mode self-consistency: vote sur n echantillons", "evidence": "prouve"},
+    "sampling_budget": {
+      "temperature": "variable (0 greedy, 0.6-1.0 self-consistency et best-of-n; pas de canon)",
+      "top_p": null,
+      "seed": null,
+      "n_samples": "variable (1 en greedy, 64 en Minerva majority voting, 1860 en PRM800K best-of-n)",
+      "k": null
+    },
+    "selection_policy": "a verifier"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": [
+        "repo hendrycks/math public depuis 2021-03 (train + test + solutions detaillees accessibles)",
+        "mirror HuggingFace `hendrycks/competition_math` (train + test exposes)",
+        "subset MATH-500 de OpenAI/PRM800K reexposant 500 items test avec annotations pas-a-pas",
+        "nombreux forks GitHub, blogs, tutoriels avec items et solutions recopies",
+        "notebooks Kaggle / Colab publics d'evaluation"
+      ],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": [
+        "solutions detaillees completes publiees dans le repo original (step-by-step LaTeX)",
+        "dataset PRM800K (OpenAI) qui annote process steps sur un subset MATH, publie publiquement",
+        "distillations math (Minerva, MathStral, Qwen-Math, DeepSeek-Math) qui embarquent des reformulations proches",
+        "datasets derives (MATH-500, MATH-Hard, OlympiadBench, OmniMath) qui reexposent les memes structures",
+        "corpus web de math competition (AoPS, Art of Problem Solving) contenant des problemes et solutions tres proches ou identiques",
+        "tutoriels CoT et blogs avec traces de resolution detaillees"
+      ],
+      "evidence": "prouve"
+    },
+    "measures": ["aucune"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "Aucune mesure cote benchmark d'origine: test set fige publiquement en 2021-03, aucun versioning de test ferme, aucune rotation, aucun verifier canonique impose, aucune validation humaine continue. Les variantes derivees (OlympiadBench, MATH-Hard, Putnam-AXIOM) cherchent a mesurer la robustesse sur difficulte superieure mais ne reparent pas MATH lui-meme.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores MATH sous meme regime: meme subset (full 5000 vs MATH-500), meme nombre de shots, meme prompt CoT, meme politique de decoding, meme n_samples, meme politique de selection (greedy vs majority voting vs PRM best-of-n), meme harness de parsing (sympy vs string match vs LLM-judge), meme snapshot modele.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "Scores cross-subset (full 5000 vs MATH-500), cross-regime (0-shot vs 4-shot Minerva vs PRM best-of-n), cross-harness (lm-eval vs scripts maison), cross-parser (sympy simplify vs string match vs LLM-judge); ni avec GSM8K (difficulte grade-school), OlympiadBench, Putnam-AXIOM, MATH-Hard (difficulte competition superieure).",
+      "evidence": "prouve"
+    },
+    "family": "math_verifiable",
+    "axes_fixed": [],
+    "axes_missing": [
+      "subset exact (full vs MATH-500)",
+      "nombre de shots",
+      "prompt CoT exact (Minerva vs vanilla)",
+      "politique de decoding (greedy / self-consistency / best-of-n guide PRM)",
+      "n_samples",
+      "presence et entrainement du reward model",
+      "version harness",
+      "snapshot modele",
+      "politique de parsing LaTeX (sympy vs string match vs LLM-judge, tolerance sur equivalence symbolique)"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Repo hendrycks/math public depuis 2021-03: train + test + solutions detaillees LaTeX tous accessibles; aucune partie fermee, aucun holdout."
+      },
+      "contamination_direct": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "5000 items test miroir sur HuggingFace, subset MATH-500 reexpose par PRM800K, forks GitHub, blogs depuis plus de 4 ans; aucune decontamination explicite cote benchmark."
+      },
+      "contamination_indirect": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Solutions detaillees LaTeX completes publiees dans le repo original, PRM800K avec annotations process, distillations math massives (Minerva, Qwen-Math, DeepSeek-Math), corpus AoPS chevauchant directement; overlap avec pretraining et SFT math quasi-garanti."
+      },
+      "incomparability": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Subset (full vs MATH-500), shots, prompt CoT, decoding, n_samples, PRM, parser LaTeX: aucun canon. Un score `MATH 50%` ne dit rien sans ce regime complet; la fragmentation est reconnue dans la litterature Minerva/PRM800K."
+      },
+      "gaming_surface": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Au moins 5 categories prouvees (format fitting sur `\\boxed{...}`, prompt tuning CoT / Minerva, harness overfitting via PRM / majority voting, hill-climbing, protocol fragmentation); contamination directe et indirecte en plus."
+      },
+      "governance": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Publie 2021-03, laisse en l'etat; repo statique, aucune rotation, aucun mecanisme tiers, aucun versioning de test ferme, aucune validation humaine continue."
+      }
+    },
+    "derived_verdict": "inutilisable"
+  }
+}
