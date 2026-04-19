@@ -1,0 +1,136 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "ancrage fort",
+    "justification": "Pilote sans run pour stresser la spec v0 sur un benchmark audite 'fiable' (MMLU-CF). Niveau d'ancrage 'ancrage fort' marque comme potentiel: il reste conditionne a la documentation d'un mecanisme d'evaluation tiers (publication_status.third_party_mechanism aujourd'hui 'aucun'). La regle de sortie 'ancrage fort exige third_party_mechanism != aucun' n'est pas declenchee ici parce que fiche_type est 'pilote sans run', pas un score publie."
+  },
+  "identity": {
+    "benchmark": {"value": "MMLU-CF", "evidence": "prouve"},
+    "version_release": {"value": null, "evidence": "a verifier"},
+    "subset_split": {"value": null, "evidence": "a verifier"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "weights"
+  },
+  "harness": {
+    "version": {"value": "microsoft/MMLU-CF (version canonique non figee)", "evidence": "a verifier"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": null, "evidence": "a verifier"},
+    "timeouts_retries_batch": {"value": null, "evidence": "a verifier"}
+  },
+  "prompt_regime": {
+    "template": {"value": null, "evidence": "a verifier"},
+    "shots": {"value": null, "evidence": "a verifier"},
+    "cot_status": "off",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "MCQ sensible a l'ordre des choix; randomization a fixer", "evidence": "a verifier"},
+    "prompt_sensitivity": {"status": "declaree non mesuree"}
+  },
+  "scoring": {
+    "metric": {"value": "accuracy", "evidence": "prouve"},
+    "final_parser": {"value": null, "evidence": "a verifier"},
+    "post_processing": {"value": null, "evidence": "a verifier"},
+    "sampling_budget": {
+      "temperature": null,
+      "top_p": null,
+      "seed": null,
+      "n_samples": null
+    },
+    "selection_policy": "greedy"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": ["test ferme par design (items et labels non distribues)"],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": ["validation publique exposable a tuning et hill-climbing"],
+      "evidence": "plausible"
+    },
+    "measures": ["test ferme", "decontamination"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "Test ferme + decontamination explicite + distributions val/test proches; mitige contamination directe sans la rendre nulle.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores MMLU-CF produits sous meme harness, meme prompt regime, meme snapshot modele, meme politique de sampling, meme version/release.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "MMLU original, MMLU-Pro, HELM MMLU; ni entre implementations differentes de MMLU-CF.",
+      "evidence": "prouve"
+    },
+    "family": "mcq_knowledge",
+    "axes_fixed": [],
+    "axes_missing": [
+      "harness canonique",
+      "prompt regime",
+      "snapshot modele",
+      "politique de sampling",
+      "version/release du set"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["test set"],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 2,
+        "evidence": "plausible",
+        "note": "Test ferme par design; l'evaluation tierce reste a documenter au niveau run mais la fermeture benchmark reste forte."
+      },
+      "contamination_direct": {
+        "score": 2,
+        "evidence": "prouve",
+        "note": "Test ferme + decontamination explicite."
+      },
+      "contamination_indirect": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "Validation publique encore exposable a tuning."
+      },
+      "incomparability": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "Harness/prompt regime non figes dans la fiche pilote."
+      },
+      "gaming_surface": {
+        "score": 2,
+        "evidence": "plausible",
+        "note": "Surface structurelle contenue par rapport aux suites publiques classiques."
+      },
+      "governance": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "Mitigation partielle via design ferme; mecanisme continu non documente dans le pilote."
+      }
+    },
+    "derived_verdict": "fiable"
+  }
+}

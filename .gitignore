@@ -1,0 +1,76 @@
+# MYTHAS - publication-safe ignore rules
+
+# Proprietary corpora
+corpus_private/
+corpus_v*.jsonl
+corpus_v*/
+*.corpus.jsonl
+*.corpus.json
+proprietary_*.jsonl
+proprietary_*.json
+
+# Private runs / answer material
+fiches/run_v*/
+runs/
+results_private/
+*_scored.json
+answer_key*
+solutions*
+
+# Secrets / credentials
+.env
+.env.*
+secrets/
+*.key
+*.pem
+*_credentials*
+
+# Logs / traces
+*.log
+logs/
+traces/
+
+# Python / build cache
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local ops / mailbox / automation
+INBOX.md
+OUTBOX.md
+WORKLOG.md
+SOURCE_INBOX.md
+AGENT_HANDOFF_PROTOCOL.md
+AGENT_MAILBOX.md
+CLAUDE_CODE_*.md
+CODEX_BRIEF.md
+REMOTE_GPU_BRIDGE.md
+run_mythas_claude_h24_*.ps1
+start_mythas_claude_h24_loop.ps1
+setup_mythas_claude_h24.ps1
+status_mythas_claude_h24.ps1
+.runtime/
+
+# Public repo surface
+!README.md
+!PROJECT_COCKPIT.md
+!PUBLICATION_SCOPE.md
+!ANTI_LIE_BENCH_V0.md
+!BENCHMARK_GAMING_TAXONOMY.md
+!V0_FICHE_SCHEMA.json
+!V0_VERDICT_THRESHOLDS.md
+!validate_v0_fiche.py
+!fiches/*.md
+!fiches/json/*.json
+!fiches/json/fixtures/*.json

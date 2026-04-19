@@ -1,0 +1,73 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "borne publique",
+    "justification": "Fixture negative: tente d'affirmer une sensibilite mesuree sans fournir la valeur numerique."
+  },
+  "identity": {
+    "benchmark": {"value": "MMLU-CF", "evidence": "prouve"},
+    "version_release": {"value": null, "evidence": "a verifier"},
+    "subset_split": {"value": null, "evidence": "a verifier"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {"value": null, "evidence": "a verifier"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": null, "evidence": "a verifier"},
+    "timeouts_retries_batch": {"value": null, "evidence": "a verifier"}
+  },
+  "prompt_regime": {
+    "template": {"value": null, "evidence": "a verifier"},
+    "shots": {"value": null, "evidence": "a verifier"},
+    "cot_status": "a verifier",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": null, "evidence": "a verifier"},
+    "prompt_sensitivity": {"status": "mesuree"}
+  },
+  "scoring": {
+    "metric": {"value": "accuracy", "evidence": "prouve"},
+    "final_parser": {"value": null, "evidence": "a verifier"},
+    "post_processing": {"value": null, "evidence": "a verifier"},
+    "sampling_budget": {
+      "temperature": null,
+      "top_p": null,
+      "seed": null,
+      "n_samples": null
+    },
+    "selection_policy": "a verifier"
+  },
+  "contamination": {
+    "direct_surfaces": {"value": [], "evidence": "a verifier"},
+    "indirect_surfaces": {"value": [], "evidence": "a verifier"},
+    "measures": ["test ferme"]
+  },
+  "gaming": {
+    "applicable_categories": [],
+    "anti_gaming_measures": {"value": null, "evidence": "a verifier"}
+  },
+  "comparability": {
+    "comparable_with": {"value": null, "evidence": "a verifier"},
+    "not_comparable_with": {"value": null, "evidence": "a verifier"},
+    "family": "mcq_knowledge",
+    "axes_fixed": [],
+    "axes_missing": []
+  },
+  "publication_status": {
+    "published": ["fiche"],
+    "closed": ["test set"],
+    "third_party_mechanism": "aucun"
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "hors ancrage",
+    "justification": "Fixture negative: mesure de contamination hors enum pour verifier que le schema rejette toute valeur non autorisee."
+  },
+  "identity": {
+    "benchmark": {"value": "SWE-bench", "evidence": "prouve"},
+    "version_release": {"value": "fixture-invalid-measure", "evidence": "prouve"},
+    "subset_split": {"value": "Verified", "evidence": "prouve"},
+    "set_hash": {"value": "fixture-invalid-measure", "evidence": "prouve"},
+    "run_date": {"value": "2026-04-19", "evidence": "prouve"},
+    "operator": {"value": "fixture-regression", "evidence": "prouve"},
+    "time_window": {
+      "start_date": {"value": "2023-10-10", "evidence": "prouve"},
+      "end_date": {"value": "2026-04-19", "evidence": "prouve"}
+    }
+  },
+  "target": {
+    "main_signal": "scaffolding",
+    "excluded_signals": ["competence", "preference"],
+    "retry_agent_active": true,
+    "reclassement_applied": true,
+    "scaffold_description": "Fixture scaffold."
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {"value": "fixture-harness", "evidence": "prouve"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": "fixture-backend", "evidence": "prouve"},
+    "timeouts_retries_batch": {"value": "variable", "evidence": "prouve"}
+  },
+  "prompt_regime": {
+    "template": {"value": "fixture-template", "evidence": "prouve"},
+    "shots": {"value": "0-shot", "evidence": "prouve"},
+    "cot_status": "free",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "non applicable", "evidence": "prouve"},
+    "prompt_sensitivity": {
+      "status": "declaree non mesuree",
+      "value": null
+    }
+  },
+  "scoring": {
+    "metric": {"value": "% instances resolues", "evidence": "prouve"},
+    "final_parser": {"value": "patch + tests", "evidence": "prouve"},
+    "post_processing": {"value": "selection patch", "evidence": "prouve"},
+    "sampling_budget": {
+      "temperature": null,
+      "top_p": null,
+      "seed": null,
+      "n_samples": null
+    },
+    "selection_policy": "a verifier"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": ["repos publics"],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": ["PRs et commentaires"],
+      "evidence": "prouve"
+    },
+    "measures": ["triage manuel"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "fixture invalid measure enum",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "scores SWE-bench meme subset et meme framework",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "scores cross-frameworks",
+      "evidence": "prouve"
+    },
+    "family": "scaffolding_agent",
+    "axes_fixed": [],
+    "axes_missing": ["framework agent", "budget", "snapshot modele"]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "validateur externe"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {"score": 0, "evidence": "prouve", "note": "public"},
+      "contamination_direct": {"score": 0, "evidence": "prouve", "note": "public"},
+      "contamination_indirect": {"score": 0, "evidence": "prouve", "note": "public"},
+      "incomparability": {"score": 0, "evidence": "prouve", "note": "variable"},
+      "gaming_surface": {"score": 0, "evidence": "prouve", "note": "elevée"},
+      "governance": {"score": 1, "evidence": "plausible", "note": "verified one-shot"}
+    },
+    "derived_verdict": "inutilisable"
+  }
+}

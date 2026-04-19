@@ -1,0 +1,623 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mythas.local/schemas/v0-fiche.schema.json",
+  "title": "Mythas v0 Fiche",
+  "description": "Machine-readable schema for a Mythas v0 benchmark score fiche. Derived from V0_FICHE_TEMPLATE.md. Each field status value is one of: prouve | plausible | a verifier. An incomplete fiche stays 'a verifier'.",
+  "type": "object",
+  "required": [
+    "status",
+    "identity",
+    "target",
+    "model",
+    "harness",
+    "prompt_regime",
+    "scoring",
+    "contamination",
+    "gaming",
+    "comparability",
+    "publication_status"
+  ],
+  "$defs": {
+    "evidence": {
+      "type": "string",
+      "enum": ["prouve", "plausible", "a verifier"]
+    },
+    "qualified_string": {
+      "type": "object",
+      "required": ["value", "evidence"],
+      "properties": {
+        "value": {"type": ["string", "null"]},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      },
+      "additionalProperties": false
+    },
+    "qualified_list": {
+      "type": "object",
+      "required": ["value", "evidence"],
+      "properties": {
+        "value": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      },
+      "additionalProperties": false
+    },
+    "verdict_dimension": {
+      "type": "object",
+      "required": ["score", "evidence"],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "enum": [0, 1, 2]
+        },
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "note": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "status": {
+      "type": "object",
+      "description": "Section 0 - fiche status. Required. An invalid status invalidates the whole fiche.",
+      "required": ["fiche_type", "anchor_level", "justification"],
+      "properties": {
+        "fiche_type": {
+          "type": "string",
+          "enum": [
+            "pilote sans run",
+            "score v0 publie, public-only",
+            "score v0 publie, ancrage fort",
+            "score v0 refuse"
+          ]
+        },
+        "anchor_level": {
+          "type": "string",
+          "enum": ["ancrage fort", "borne publique", "hors ancrage"]
+        },
+        "justification": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "identity": {
+      "type": "object",
+      "description": "Section 1 - score identity.",
+      "required": ["benchmark", "version_release", "subset_split", "set_hash", "run_date", "operator"],
+      "properties": {
+        "benchmark": {"$ref": "#/$defs/qualified_string"},
+        "version_release": {"$ref": "#/$defs/qualified_string"},
+        "subset_split": {"$ref": "#/$defs/qualified_string"},
+        "set_hash": {"$ref": "#/$defs/qualified_string"},
+        "time_window": {
+          "type": "object",
+          "description": "Only required for dynamic benchmarks with a date window.",
+          "properties": {
+            "start_date": {"$ref": "#/$defs/qualified_string"},
+            "end_date": {"$ref": "#/$defs/qualified_string"}
+          },
+          "additionalProperties": false
+        },
+        "run_date": {"$ref": "#/$defs/qualified_string"},
+        "operator": {"$ref": "#/$defs/qualified_string"}
+      },
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "description": "Section 2 - measured target + mandatory reclassement rule.",
+      "required": ["main_signal", "excluded_signals", "retry_agent_active", "reclassement_applied"],
+      "properties": {
+        "main_signal": {
+          "type": "string",
+          "enum": ["competence", "preference", "scaffolding"]
+        },
+        "excluded_signals": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["competence", "preference", "scaffolding"]}
+        },
+        "retry_agent_active": {
+          "type": "boolean",
+          "description": "True if retry, feedback, multi-turn, tools, self-repair, best-of-n with verifier is active."
+        },
+        "reclassement_applied": {
+          "type": "boolean",
+          "description": "Must be true if retry_agent_active is true and main_signal is set accordingly (scaffolding). Validation rule enforced externally."
+        },
+        "scaffold_description": {
+          "type": ["string", "null"],
+          "description": "Required when main_signal=scaffolding."
+        }
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "description": "Section 3 - model identity.",
+      "required": ["name", "snapshot", "access_mode"],
+      "properties": {
+        "name": {"$ref": "#/$defs/qualified_string"},
+        "snapshot": {"$ref": "#/$defs/qualified_string"},
+        "access_mode": {
+          "type": "string",
+          "enum": ["weights", "API", "a verifier"]
+        },
+        "api_details": {
+          "type": "object",
+          "description": "Required if access_mode=API.",
+          "properties": {
+            "date": {"$ref": "#/$defs/qualified_string"},
+            "revision": {"$ref": "#/$defs/qualified_string"},
+            "region": {"$ref": "#/$defs/qualified_string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "harness": {
+      "type": "object",
+      "description": "Section 4 - eval harness.",
+      "required": ["version", "code_hash", "backend", "timeouts_retries_batch"],
+      "properties": {
+        "version": {"$ref": "#/$defs/qualified_string"},
+        "code_hash": {"$ref": "#/$defs/qualified_string"},
+        "backend": {"$ref": "#/$defs/qualified_string"},
+        "timeouts_retries_batch": {"$ref": "#/$defs/qualified_string"}
+      },
+      "additionalProperties": false
+    },
+    "prompt_regime": {
+      "type": "object",
+      "description": "Section 5 - prompt regime.",
+      "required": ["template", "shots", "cot_status", "system_prompt", "choice_order", "prompt_sensitivity"],
+      "properties": {
+        "template": {"$ref": "#/$defs/qualified_string"},
+        "shots": {"$ref": "#/$defs/qualified_string"},
+        "cot_status": {
+          "type": "string",
+          "enum": ["on", "off", "forced", "free", "a verifier"]
+        },
+        "system_prompt": {"$ref": "#/$defs/qualified_string"},
+        "choice_order": {"$ref": "#/$defs/qualified_string"},
+        "prompt_sensitivity": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": {"type": "string", "enum": ["mesuree", "declaree non mesuree"]},
+            "value": {"type": ["number", "string", "null"]}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "scoring": {
+      "type": "object",
+      "description": "Section 6 - scoring.",
+      "required": ["metric", "final_parser", "post_processing", "sampling_budget", "selection_policy"],
+      "properties": {
+        "metric": {"$ref": "#/$defs/qualified_string"},
+        "final_parser": {"$ref": "#/$defs/qualified_string"},
+        "post_processing": {"$ref": "#/$defs/qualified_string"},
+        "sampling_budget": {
+          "type": "object",
+          "required": ["temperature", "top_p", "seed", "n_samples"],
+          "properties": {
+            "temperature": {"type": ["number", "string", "null"]},
+            "top_p": {"type": ["number", "string", "null"]},
+            "seed": {"type": ["integer", "string", "null"]},
+            "n_samples": {"type": ["integer", "string", "null"]},
+            "k": {
+              "type": ["integer", "string", "null"],
+              "description": "Optional. Target k for pass@k (integer when a single k is fixed, string when variable/multi-valued e.g. '1|10|100', null when not applicable)."
+            }
+          },
+          "additionalProperties": false
+        },
+        "selection_policy": {
+          "type": "string",
+          "enum": ["greedy", "majority", "pass@k", "best-of-n", "autre", "a verifier"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "contamination": {
+      "type": "object",
+      "description": "Section 7 - declared contamination.",
+      "required": ["direct_surfaces", "indirect_surfaces", "measures"],
+      "properties": {
+        "direct_surfaces": {"$ref": "#/$defs/qualified_list"},
+        "indirect_surfaces": {"$ref": "#/$defs/qualified_list"},
+        "measures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "test ferme",
+              "separation temporelle",
+              "validation humaine",
+              "randomization",
+              "decontamination",
+              "aucune"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "gaming": {
+      "type": "object",
+      "description": "Section 8 - declared gaming, aligned on BENCHMARK_GAMING_TAXONOMY.md.",
+      "required": ["applicable_categories", "anti_gaming_measures"],
+      "properties": {
+        "applicable_categories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "contamination directe",
+              "contamination indirecte",
+              "prompt tuning",
+              "format fitting",
+              "hill-climbing leaderboard",
+              "harness overfitting",
+              "style gaming / judge gaming",
+              "protocol fragmentation"
+            ]
+          }
+        },
+        "anti_gaming_measures": {"$ref": "#/$defs/qualified_string"}
+      },
+      "additionalProperties": false
+    },
+    "comparability": {
+      "type": "object",
+      "description": "Section 9 and 9.bis - comparability bounds + family axes.",
+      "required": ["comparable_with", "not_comparable_with", "family", "axes_fixed", "axes_missing"],
+      "properties": {
+        "comparable_with": {"$ref": "#/$defs/qualified_string"},
+        "not_comparable_with": {"$ref": "#/$defs/qualified_string"},
+        "family": {
+          "type": "string",
+          "enum": [
+            "mcq_knowledge",
+            "math_verifiable",
+            "code_static",
+            "code_dynamic",
+            "scaffolding_agent",
+            "arena_preference",
+            "leaderboard_static"
+          ]
+        },
+        "axes_fixed": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "axes_missing": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "publication_status": {
+      "type": "object",
+      "description": "Section 10 - public / closed status + third-party eval mechanism.",
+      "required": ["published", "closed", "third_party_mechanism"],
+      "properties": {
+        "published": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["schema tache", "set validation", "code eval", "taxonomie gaming", "fiche", "autre"]
+          }
+        },
+        "closed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["test set", "parsers canoniques", "seeds", "scores par item", "aucune fermeture"]
+          }
+        },
+        "third_party_mechanism": {
+          "type": "string",
+          "enum": ["submission protocol", "validateur externe", "hold-out controle", "aucun"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "published_score": {
+      "type": "object",
+      "description": "Optional. Required only when fiche_type is a 'score v0 publie...' variant. Matches the (signal, valeur, regime) triplet of the template.",
+      "required": ["signal", "value", "regime"],
+      "properties": {
+        "signal": {"type": "string", "enum": ["competence", "preference", "scaffolding"]},
+        "value": {"type": ["number", "string"]},
+        "regime": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "verdict": {
+      "type": "object",
+      "description": "Optional verdict block derived from V0_VERDICT_THRESHOLDS.md. When present, semantic derivation is checked by validate_v0_fiche.py.",
+      "required": ["dimensions", "derived_verdict"],
+      "properties": {
+        "dimensions": {
+          "type": "object",
+          "required": [
+            "closure",
+            "contamination_direct",
+            "contamination_indirect",
+            "incomparability",
+            "gaming_surface",
+            "governance"
+          ],
+          "properties": {
+            "closure": {"$ref": "#/$defs/verdict_dimension"},
+            "contamination_direct": {"$ref": "#/$defs/verdict_dimension"},
+            "contamination_indirect": {"$ref": "#/$defs/verdict_dimension"},
+            "incomparability": {"$ref": "#/$defs/verdict_dimension"},
+            "gaming_surface": {"$ref": "#/$defs/verdict_dimension"},
+            "governance": {"$ref": "#/$defs/verdict_dimension"}
+          },
+          "additionalProperties": false
+        },
+        "derived_verdict": {
+          "type": "string",
+          "enum": ["fiable", "fragile", "compromis", "inutilisable"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "description": "Rule: ancrage fort requires a third-party eval mechanism.",
+      "if": {
+        "properties": {
+          "status": {
+            "properties": {"fiche_type": {"const": "score v0 publie, ancrage fort"}},
+            "required": ["fiche_type"]
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "publication_status": {
+            "properties": {
+              "third_party_mechanism": {
+                "not": {"const": "aucun"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule: if retry_agent_active then main_signal must be scaffolding.",
+      "if": {
+        "properties": {
+          "target": {
+            "properties": {"retry_agent_active": {"const": true}},
+            "required": ["retry_agent_active"]
+          }
+        },
+        "required": ["target"]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {"main_signal": {"const": "scaffolding"}}
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule: arena_preference family forbids main_signal=competence.",
+      "if": {
+        "properties": {
+          "comparability": {
+            "properties": {"family": {"const": "arena_preference"}},
+            "required": ["family"]
+          }
+        },
+        "required": ["comparability"]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {"main_signal": {"const": "preference"}}
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule: scaffolding_agent family forces main_signal=scaffolding.",
+      "if": {
+        "properties": {
+          "comparability": {
+            "properties": {"family": {"const": "scaffolding_agent"}},
+            "required": ["family"]
+          }
+        },
+        "required": ["comparability"]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {"main_signal": {"const": "scaffolding"}}
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule: anchor_level=ancrage fort requires a third-party eval mechanism, except for fiche_type=pilote sans run (where ancrage fort is marked as potential).",
+      "if": {
+        "properties": {
+          "status": {
+            "properties": {
+              "anchor_level": {"const": "ancrage fort"},
+              "fiche_type": {"not": {"const": "pilote sans run"}}
+            },
+            "required": ["anchor_level", "fiche_type"]
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "publication_status": {
+            "properties": {
+              "third_party_mechanism": {
+                "not": {"const": "aucun"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule: the 'a verifier' enum value on cot_status, selection_policy, access_mode is only admissible for fiche_type=pilote sans run.",
+      "if": {
+        "properties": {
+          "status": {
+            "properties": {"fiche_type": {"not": {"const": "pilote sans run"}}},
+            "required": ["fiche_type"]
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "prompt_regime": {
+            "properties": {"cot_status": {"not": {"const": "a verifier"}}}
+          },
+          "scoring": {
+            "properties": {"selection_policy": {"not": {"const": "a verifier"}}}
+          },
+          "model": {
+            "properties": {"access_mode": {"not": {"const": "a verifier"}}}
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule: a published score requires the published_score object.",
+      "if": {
+        "properties": {
+          "status": {
+            "properties": {
+              "fiche_type": {
+                "enum": [
+                  "score v0 publie, public-only",
+                  "score v0 publie, ancrage fort"
+                ]
+              }
+            },
+            "required": ["fiche_type"]
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {"required": ["published_score"]}
+    },
+    {
+      "description": "Rule v0.2: time-sensitive families (code_dynamic, leaderboard_static, scaffolding_agent) require identity.time_window with both start_date and end_date.",
+      "if": {
+        "properties": {
+          "comparability": {
+            "properties": {
+              "family": {
+                "enum": ["code_dynamic", "leaderboard_static", "scaffolding_agent"]
+              }
+            },
+            "required": ["family"]
+          }
+        },
+        "required": ["comparability"]
+      },
+      "then": {
+        "properties": {
+          "identity": {
+            "required": ["time_window"],
+            "properties": {
+              "time_window": {
+                "required": ["start_date", "end_date"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule v0.3: if prompt_sensitivity.status=mesuree then prompt_sensitivity.value must be present and non-null (numeric or non-empty string).",
+      "if": {
+        "properties": {
+          "prompt_regime": {
+            "properties": {
+              "prompt_sensitivity": {
+                "properties": {"status": {"const": "mesuree"}},
+                "required": ["status"]
+              }
+            },
+            "required": ["prompt_sensitivity"]
+          }
+        },
+        "required": ["prompt_regime"]
+      },
+      "then": {
+        "properties": {
+          "prompt_regime": {
+            "properties": {
+              "prompt_sensitivity": {
+                "required": ["value"],
+                "properties": {
+                  "value": {
+                    "oneOf": [
+                      {"type": "number"},
+                      {"type": "string", "minLength": 1}
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Rule v0.6: if scoring.selection_policy=pass@k then scoring.sampling_budget.k must be present and non-null (integer or string).",
+      "if": {
+        "properties": {
+          "scoring": {
+            "properties": {"selection_policy": {"const": "pass@k"}},
+            "required": ["selection_policy"]
+          }
+        },
+        "required": ["scoring"]
+      },
+      "then": {
+        "properties": {
+          "scoring": {
+            "properties": {
+              "sampling_budget": {
+                "required": ["k"],
+                "properties": {
+                  "k": {
+                    "oneOf": [
+                      {"type": "integer"},
+                      {"type": "string", "minLength": 1}
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

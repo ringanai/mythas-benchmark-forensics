@@ -1,0 +1,153 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "hors ancrage",
+    "justification": "Fixture negative: sampling_budget.k force a un type invalide (float 1.5) pour verifier que le schema rejette toute valeur hors union integer|string|null."
+  },
+  "identity": {
+    "benchmark": {"value": "HumanEval", "evidence": "prouve"},
+    "version_release": {"value": "HumanEval (OpenAI, 2021-07, arXiv 2107.03374, github.com/openai/human-eval)", "evidence": "prouve"},
+    "subset_split": {"value": "164 problemes Python (unique split officiel)", "evidence": "prouve"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false,
+    "scaffold_description": null
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {"value": "harness officiel openai/human-eval + reimplementations (EleutherAI lm-eval, bigcode-evaluation-harness, EvalPlus)", "evidence": "prouve"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": "generation de code a partir de docstring + signature, execution des tests unitaires fournis dans un sandbox", "evidence": "prouve"},
+    "timeouts_retries_batch": {"value": "variables selon reimplementation (timeout par item, taille de batch, nombre de samples non canonique)", "evidence": "prouve"}
+  },
+  "prompt_regime": {
+    "template": {"value": "le prompt est la docstring + signature de la fonction; pas de template externe impose dans la source primaire", "evidence": "prouve"},
+    "shots": {"value": "0-shot", "evidence": "prouve"},
+    "cot_status": "free",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "non applicable (pas de MCQ)", "evidence": "prouve"},
+    "prompt_sensitivity": {
+      "status": "declaree non mesuree",
+      "value": null
+    }
+  },
+  "scoring": {
+    "metric": {"value": "pass@k (k in {1, 10, 100} dans le papier original); estimateur non-biaise sur n samples", "evidence": "prouve"},
+    "final_parser": {"value": "extraction du code genere, concatenation avec signature, execution contre tests unitaires", "evidence": "prouve"},
+    "post_processing": {"value": "selection parmi n samples; pass@k = probabilite qu'au moins une completion sur k tires passe tous les tests", "evidence": "prouve"},
+    "sampling_budget": {
+      "temperature": "variable (0.2 pour pass@1, 0.8 pour pass@10/100 dans le papier original; non canonique)",
+      "top_p": null,
+      "seed": null,
+      "n_samples": "variable selon k vise (>=200 pour estimateur pass@100 stable dans le papier)",
+      "k": 1.5
+    },
+    "selection_policy": "pass@k"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": [
+        "164 problemes publics sur github.com/openai/human-eval depuis 2021-07",
+        "mirror HuggingFace openai_humaneval",
+        "solutions completes publiees sur blogs, tutoriels, forks GitHub",
+        "reponses discutees sur Stack Overflow"
+      ],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": [
+        "datasets derives (HumanEval+, EvalPlus, MultiPL-E) qui reexposent les prompts",
+        "exercices de coding generique proches des 164 items dans les corpus de train",
+        "distillations et repartage des solutions",
+        "notebooks Kaggle, Colab publics avec completions"
+      ],
+      "evidence": "prouve"
+    },
+    "measures": ["aucune"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "Aucune mesure anti-gaming cote benchmark d'origine: set public fige en 2021, pas de rotation, pas de test ferme, pas de validation humaine continue. EvalPlus ajoute des tests mais ne traite ni la contamination ni l'inflation pass@k.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores HumanEval sous meme k, meme temperature, meme n_samples, meme harness, meme snapshot modele; tout changement de budget d'echantillonnage casse la comparabilite.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "Scores cross-k (pass@1 vs pass@10 vs pass@100), cross-harness (openai/human-eval vs EvalPlus vs bigcode-harness), cross-temperature; ni avec MBPP/LiveCodeBench/SWE-bench (objets et familles distincts).",
+      "evidence": "prouve"
+    },
+    "family": "code_static",
+    "axes_fixed": [],
+    "axes_missing": [
+      "k dans pass@k",
+      "temperature",
+      "n_samples",
+      "version harness",
+      "snapshot modele",
+      "politique de parsing du code genere"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "164 problemes, tests unitaires et harness tous publics depuis 2021-07; aucune partie fermee."
+      },
+      "contamination_direct": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Mirroring quasi-universel (GitHub, HuggingFace, blogs, Stack Overflow); aucune decontamination cote benchmark."
+      },
+      "contamination_indirect": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Solutions detaillees, datasets derives (EvalPlus, HumanEval+, MultiPL-E), distillations; overlap avec corpus de train quasi-garanti."
+      },
+      "incomparability": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "pass@k, temperature, n_samples, timeout, harness divergents sans canon; pass@1 vs pass@100 racontent des histoires differentes."
+      },
+      "gaming_surface": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Au moins 4 categories prouvees (prompt tuning, format fitting, harness overfitting, hill-climbing); contamination en plus."
+      },
+      "governance": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Publie 2021-07, laisse en l'etat; aucun mecanisme continu, aucune rotation, aucun validateur externe."
+      }
+    },
+    "derived_verdict": "inutilisable"
+  }
+}

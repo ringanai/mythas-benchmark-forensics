@@ -1,0 +1,220 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "hors ancrage",
+    "justification": "NEGATIVE FIXTURE: 6 dimensions a 0 mais derived_verdict=fiable pour verifier que le validateur rejette bien un MMLU falsifie en fiable."
+  },
+  "identity": {
+    "benchmark": {
+      "value": "MMLU",
+      "evidence": "prouve"
+    },
+    "version_release": {
+      "value": "hendrycks/test (2020-09); pas de versioning formel ensuite",
+      "evidence": "prouve"
+    },
+    "subset_split": {
+      "value": "test split, 57 sujets, 15908 items",
+      "evidence": "prouve"
+    },
+    "set_hash": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "run_date": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "operator": {
+      "value": null,
+      "evidence": "a verifier"
+    }
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": [
+      "preference",
+      "scaffolding"
+    ],
+    "retry_agent_active": false,
+    "reclassement_applied": false,
+    "scaffold_description": null
+  },
+  "model": {
+    "name": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "snapshot": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "access_mode": "weights"
+  },
+  "harness": {
+    "version": {
+      "value": "multiples harnesses coexistent (lm-eval-harness, HELM, custom) sans version canonique",
+      "evidence": "prouve"
+    },
+    "code_hash": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "backend": {
+      "value": "logprobs ou generation libre + parsing selon harness",
+      "evidence": "prouve"
+    },
+    "timeouts_retries_batch": {
+      "value": null,
+      "evidence": "a verifier"
+    }
+  },
+  "prompt_regime": {
+    "template": {
+      "value": "pas de template unique impose; formats A/B/C/D varient selon l'implementation",
+      "evidence": "prouve"
+    },
+    "shots": {
+      "value": "0-shot ou 5-shot selon papiers",
+      "evidence": "prouve"
+    },
+    "cot_status": "free",
+    "system_prompt": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "choice_order": {
+      "value": "Non randomise par defaut dans la plupart des implementations",
+      "evidence": "plausible"
+    },
+    "prompt_sensitivity": {
+      "status": "mesuree",
+      "value": "~4-5% de variation sur 24 styles (rapportee par MMLU-Pro)"
+    }
+  },
+  "scoring": {
+    "metric": {
+      "value": "accuracy",
+      "evidence": "prouve"
+    },
+    "final_parser": {
+      "value": "regex lettre ou argmax logprobs selon harness",
+      "evidence": "prouve"
+    },
+    "post_processing": {
+      "value": "variable: logprobs vs generation + extraction de lettre",
+      "evidence": "prouve"
+    },
+    "sampling_budget": {
+      "temperature": "generalement greedy",
+      "top_p": null,
+      "seed": null,
+      "n_samples": 1
+    },
+    "selection_policy": "greedy"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": [
+        "items et labels publics sur GitHub hendrycks/test",
+        "miroirs HuggingFace (cais/mmlu, lukaemon/mmlu, forks multiples)"
+      ],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": [
+        "solutions detaillees",
+        "walkthroughs pedagogiques",
+        "blogs",
+        "repos tiers de reponses",
+        "distillations dans des datasets d'entrainement"
+      ],
+      "evidence": "prouve"
+    },
+    "measures": [
+      "aucune"
+    ]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "aucune mesure anti-gaming documentee par les auteurs; benchmark statique publie une fois.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores MMLU produits sous meme harness, meme prompt template, meme nombre de shots, meme parser, meme budget et meme snapshot de modele.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "MMLU-Pro, MMLU-CF, HELM MMLU (protocoles distincts); ni entre harnesses differents du meme MMLU.",
+      "evidence": "prouve"
+    },
+    "family": "mcq_knowledge",
+    "axes_fixed": [],
+    "axes_missing": [
+      "harness",
+      "prompt template",
+      "shots",
+      "parser",
+      "sampling budget",
+      "snapshot modele"
+    ]
+  },
+  "publication_status": {
+    "published": [
+      "schema tache",
+      "set validation",
+      "code eval",
+      "fiche"
+    ],
+    "closed": [
+      "aucune fermeture"
+    ],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Items et labels telechargeables depuis 2020 via hendrycks/test."
+      },
+      "contamination_direct": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Aucune decontamination officielle; l'existence meme de MMLU-CF atteste de la severite."
+      },
+      "contamination_indirect": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Solutions, walkthroughs, miroirs HF et distillations omnipresents."
+      },
+      "incomparability": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Multiples harnesses coexistent; HELM documente les divergences de scores et parfois de classements."
+      },
+      "gaming_surface": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Au moins 5 categories applicables hors contamination directe (prompt tuning, format fitting, hill-climbing, harness overfitting, protocol fragmentation)."
+      },
+      "governance": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Aucun mecanisme de soumission tierce, pas de re-release, pas de rotation."
+      }
+    },
+    "derived_verdict": "fiable"
+  }
+}

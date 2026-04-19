@@ -1,0 +1,146 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "borne publique",
+    "justification": "Pilote sans run pour stresser la spec v0 sur un benchmark code dynamique 'fragile' (LiveCodeBench). Pas de test ferme par design, pas de mecanisme d'evaluation tiers; la regle de sortie du template interdit l'ancrage fort. Niveau retenu: borne publique."
+  },
+  "identity": {
+    "benchmark": {"value": "LiveCodeBench", "evidence": "prouve"},
+    "version_release": {"value": "release_v1..release_v6 disponibles publiquement; canonique v0 non figee", "evidence": "a verifier"},
+    "subset_split": {"value": "code_generation_lite | code_generation | codeexecution | testoutputprediction (a fixer)", "evidence": "a verifier"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "time_window": {
+      "start_date": {"value": null, "evidence": "a verifier"},
+      "end_date": {"value": null, "evidence": "a verifier"}
+    },
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference"],
+    "retry_agent_active": false,
+    "reclassement_applied": false,
+    "scaffold_description": null
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "weights"
+  },
+  "harness": {
+    "version": {"value": "repo livecodebench/livecodebench public; version canonique non figee", "evidence": "a verifier"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": "vLLM ou API; checker derive d'APPS modifie au cours du temps", "evidence": "a verifier"},
+    "timeouts_retries_batch": {"value": null, "evidence": "a verifier"}
+  },
+  "prompt_regime": {
+    "template": {"value": "Templates model-family-specifiques presents dans le code", "evidence": "a verifier"},
+    "shots": {"value": null, "evidence": "a verifier"},
+    "cot_status": "free",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "Non applicable (pas de MCQ)", "evidence": "prouve"},
+    "prompt_sensitivity": {"status": "declaree non mesuree"}
+  },
+  "scoring": {
+    "metric": {"value": "pass@1 ou pass@5 selon scenario", "evidence": "prouve"},
+    "final_parser": {"value": "Execution automatisee, pas de parsing textuel", "evidence": "prouve"},
+    "post_processing": {"value": "Extraction de code, stripping markdown, handling imports", "evidence": "a verifier"},
+    "sampling_budget": {
+      "temperature": "0.2 (defaut doc)",
+      "top_p": null,
+      "seed": null,
+      "n_samples": "10 (defaut doc)",
+      "k": "1|5"
+    },
+    "selection_policy": "pass@k"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": ["items recents susceptibles de migrer en walkthroughs publics"],
+      "evidence": "plausible"
+    },
+    "indirect_surfaces": {
+      "value": ["editorials concours", "solutions GitHub", "forums competitive programming", "releases publiques", "leaderboard"],
+      "evidence": "prouve"
+    },
+    "measures": ["separation temporelle"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "Collecte continue, versioning par release, filtrage par fenetre de dates, consigne post-cutoff.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores LiveCodeBench produits sous meme release, meme scenario, meme fenetre temporelle, meme checker, meme harness, meme prompt regime, meme budget, meme snapshot modele.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "HumanEval, MBPP, SWE-bench, BigCodeBench; ni entre releases ou fenetres differentes de LiveCodeBench.",
+      "evidence": "prouve"
+    },
+    "family": "code_dynamic",
+    "axes_fixed": [],
+    "axes_missing": [
+      "release",
+      "scenario",
+      "fenetre temporelle",
+      "checker",
+      "harness",
+      "prompt regime",
+      "budget sampling",
+      "snapshot modele"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 1,
+        "evidence": "prouve",
+        "note": "Separation temporelle et versioning, mais pas de test ferme."
+      },
+      "contamination_direct": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "Mitigation par fenetre temporelle, sans elimination complete."
+      },
+      "contamination_indirect": {
+        "score": 1,
+        "evidence": "prouve",
+        "note": "Editorials, solutions GitHub et discussions publiques."
+      },
+      "incomparability": {
+        "score": 1,
+        "evidence": "prouve",
+        "note": "Releases/scenarios/harness multiples documentes mais non uniques."
+      },
+      "gaming_surface": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "Leaderboard public + prompt tuning + harness sensitivity."
+      },
+      "governance": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "Versioning public et cadence de release, sans mecanisme tiers ferme."
+      }
+    },
+    "derived_verdict": "fragile"
+  }
+}

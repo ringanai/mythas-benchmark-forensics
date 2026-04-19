@@ -1,0 +1,115 @@
+{
+  "status": {
+    "fiche_type": "score v0 publie, public-only",
+    "anchor_level": "ancrage fort",
+    "justification": "Fixture de regression volontairement invalide: score publie public-only qui tente de revendiquer un ancrage fort sans mecanisme tiers."
+  },
+  "identity": {
+    "benchmark": {"value": "LiveCodeBench", "evidence": "prouve"},
+    "version_release": {"value": "release_v6", "evidence": "prouve"},
+    "subset_split": {"value": "code_generation", "evidence": "prouve"},
+    "set_hash": {"value": "fixture-invalid-anchor-fort-public-only", "evidence": "prouve"},
+    "time_window": {
+      "start_date": {"value": "2025-01-01", "evidence": "prouve"},
+      "end_date": {"value": "2025-03-31", "evidence": "prouve"}
+    },
+    "run_date": {"value": "2026-04-19", "evidence": "prouve"},
+    "operator": {"value": "fixture-regression", "evidence": "prouve"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false,
+    "scaffold_description": null
+  },
+  "model": {
+    "name": {"value": "fixture-model", "evidence": "prouve"},
+    "snapshot": {"value": "2026-04-19-fixture", "evidence": "prouve"},
+    "access_mode": "weights"
+  },
+  "harness": {
+    "version": {"value": "fixture-harness-v1", "evidence": "prouve"},
+    "code_hash": {"value": "fixture-code-hash", "evidence": "prouve"},
+    "backend": {"value": "fixture-backend", "evidence": "prouve"},
+    "timeouts_retries_batch": {"value": "timeout=30s,retry=0,batch=1", "evidence": "prouve"}
+  },
+  "prompt_regime": {
+    "template": {"value": "fixture-template", "evidence": "prouve"},
+    "shots": {"value": "0", "evidence": "prouve"},
+    "cot_status": "off",
+    "system_prompt": {"value": "none", "evidence": "prouve"},
+    "choice_order": {"value": "non applicable", "evidence": "prouve"},
+    "prompt_sensitivity": {
+      "status": "declaree non mesuree",
+      "value": null
+    }
+  },
+  "scoring": {
+    "metric": {"value": "pass@1", "evidence": "prouve"},
+    "final_parser": {"value": "execution automatisee", "evidence": "prouve"},
+    "post_processing": {"value": "strip markdown", "evidence": "prouve"},
+    "sampling_budget": {
+      "temperature": 0.2,
+      "top_p": 1.0,
+      "seed": 123,
+      "n_samples": 1
+    },
+    "selection_policy": "greedy"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": ["items publics"],
+      "evidence": "plausible"
+    },
+    "indirect_surfaces": {
+      "value": ["editorials", "GitHub"],
+      "evidence": "prouve"
+    },
+    "measures": ["separation temporelle"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination indirecte",
+      "prompt tuning",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "fixture de test de non-contournement",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "scores LiveCodeBench meme release et meme protocole",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "tout score hors protocole fixe",
+      "evidence": "prouve"
+    },
+    "family": "code_dynamic",
+    "axes_fixed": [
+      "release",
+      "scenario",
+      "harness",
+      "prompt regime",
+      "budget sampling",
+      "snapshot modele"
+    ],
+    "axes_missing": [
+      "checker"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "aucun"
+  },
+  "published_score": {
+    "signal": "competence",
+    "value": 0.42,
+    "regime": "fixture invalid public-only anchor fort without third-party mechanism"
+  }
+}

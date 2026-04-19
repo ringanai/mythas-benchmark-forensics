@@ -1,0 +1,206 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "ancrage fort",
+    "justification": "Fixture negative: tentative de revendiquer ancrage fort pour un benchmark dont le verdict derive est 'inutilisable'. Doit etre rejete par la regle semantique liant derived_verdict=inutilisable a anchor_level in {hors ancrage, borne publique}."
+  },
+  "identity": {
+    "benchmark": {
+      "value": "MMLU (Massive Multitask Language Understanding)",
+      "evidence": "prouve"
+    },
+    "version_release": {
+      "value": "dataset public 2020 / hendrycks/test",
+      "evidence": "prouve"
+    },
+    "subset_split": {
+      "value": "57 sujets, test set public",
+      "evidence": "prouve"
+    },
+    "set_hash": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "run_date": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "operator": {
+      "value": null,
+      "evidence": "a verifier"
+    }
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false
+  },
+  "model": {
+    "name": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "snapshot": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {
+      "value": "Plusieurs harnesses publics coexistent (lm-eval, HELM, custom)",
+      "evidence": "prouve"
+    },
+    "code_hash": {
+      "value": null,
+      "evidence": "a verifier"
+    },
+    "backend": {
+      "value": "variable selon implementation",
+      "evidence": "prouve"
+    },
+    "timeouts_retries_batch": {
+      "value": null,
+      "evidence": "a verifier"
+    }
+  },
+  "prompt_regime": {
+    "template": {
+      "value": "pas de template unique impose; implementations variables",
+      "evidence": "prouve"
+    },
+    "shots": {
+      "value": "0-shot ou 5-shot selon papiers",
+      "evidence": "prouve"
+    },
+    "cot_status": "a verifier",
+    "system_prompt": {
+      "value": "pas de system prompt canonique",
+      "evidence": "prouve"
+    },
+    "choice_order": {
+      "value": "ordre des choix et parsing variables selon harness",
+      "evidence": "prouve"
+    },
+    "prompt_sensitivity": {
+      "status": "mesuree",
+      "value": "~4-5% de variation selon le style de prompt (reference MMLU-Pro)"
+    }
+  },
+  "scoring": {
+    "metric": {
+      "value": "accuracy",
+      "evidence": "prouve"
+    },
+    "final_parser": {
+      "value": "regex lettre / logprobs / generation+extraction selon implementation",
+      "evidence": "prouve"
+    },
+    "post_processing": {
+      "value": "variable selon harness",
+      "evidence": "prouve"
+    },
+    "sampling_budget": {
+      "temperature": null,
+      "top_p": null,
+      "seed": null,
+      "n_samples": null
+    },
+    "selection_policy": "a verifier"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": [
+        "items et labels publics depuis 2020",
+        "mirrors HuggingFace",
+        "forks GitHub multiples"
+      ],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": [
+        "solutions et walkthroughs",
+        "blogs et repos tiers",
+        "distillations et reprises de variantes"
+      ],
+      "evidence": "prouve"
+    },
+    "measures": ["aucune"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "Aucune mitigation structurelle; benchmark statique public sans rotation ni decontamination.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "uniquement scores MMLU sous meme harness, meme prompt regime, meme parser, meme snapshot modele",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "MMLU scores nus entre harnesses/leaderboards differents; MMLU-Pro; HELM MMLU; benchmarks knowledge distincts",
+      "evidence": "prouve"
+    },
+    "family": "mcq_knowledge",
+    "axes_fixed": [],
+    "axes_missing": [
+      "release",
+      "subset",
+      "prompt_template",
+      "shots",
+      "cot",
+      "choice_order",
+      "model_snapshot"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Items et labels telechargeables depuis 2020."
+      },
+      "contamination_direct": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Aucune decontamination officielle; benchmark public ancien."
+      },
+      "contamination_indirect": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Solutions, walkthroughs, mirrors et distillations omnipresents."
+      },
+      "incomparability": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Divergences documentees entre harnesses et protocoles."
+      },
+      "gaming_surface": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Au moins 5 categories applicables hors contamination directe."
+      },
+      "governance": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Aucun mecanisme de soumission tierce, aucune rotation."
+      }
+    },
+    "derived_verdict": "inutilisable"
+  }
+}

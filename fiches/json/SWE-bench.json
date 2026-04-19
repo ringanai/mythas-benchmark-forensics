@@ -1,0 +1,157 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "hors ancrage",
+    "justification": "Pilote sans run convertissant `fiches/SWE-bench.md` en instance JSON v0.5. Benchmark reclasse `inutilisable` (s=1, zeros=5): contamination GitHub structurelle + dependance totale au scaffolding agent. Aucun ancrage Mythas possible."
+  },
+  "identity": {
+    "benchmark": {"value": "SWE-bench", "evidence": "prouve"},
+    "version_release": {"value": "SWE-bench (2023-10, arXiv 2310.06770) + subsets Lite (300) et Verified (~500, 2024)", "evidence": "prouve"},
+    "subset_split": {"value": "full 2294 items / Lite 300 / Verified ~500", "evidence": "prouve"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"},
+    "time_window": {
+      "start_date": {"value": "2023-10-10", "evidence": "prouve"},
+      "end_date": {"value": "2026-04-19", "evidence": "prouve"}
+    }
+  },
+  "target": {
+    "main_signal": "scaffolding",
+    "excluded_signals": ["competence", "preference"],
+    "retry_agent_active": true,
+    "reclassement_applied": true,
+    "scaffold_description": "Agent frameworks heterogenes (SWE-agent, Agentless, Devin, OpenHands, etc.) avec tool-use iteratif, retry, multi-turn, acces repo, execution de tests. Signal mesure = scaffolding + modele, non separable."
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {"value": "harness officiel SWE-bench (github.com/SWE-bench/SWE-bench) + frameworks agent externes non standardises", "evidence": "prouve"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": "application de patch + execution de tests unitaires dans un environnement docker par instance", "evidence": "prouve"},
+    "timeouts_retries_batch": {"value": "variables selon framework agent (budget tokens/tentatives/temps non canonique)", "evidence": "prouve"}
+  },
+  "prompt_regime": {
+    "template": {"value": "pas de template unique; chaque framework agent definit son propre pipeline (system prompt, outils, boucle)", "evidence": "prouve"},
+    "shots": {"value": "0-shot au sens benchmark; scaffolding agent injecte contexte repo + issue", "evidence": "prouve"},
+    "cot_status": "free",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "non applicable (pas de MCQ)", "evidence": "prouve"},
+    "prompt_sensitivity": {
+      "status": "declaree non mesuree",
+      "value": null
+    }
+  },
+  "scoring": {
+    "metric": {"value": "% instances resolues (tests passent apres application du patch genere)", "evidence": "prouve"},
+    "final_parser": {"value": "extraction diff/patch + apply + run tests", "evidence": "prouve"},
+    "post_processing": {"value": "selection de patch multi-candidats, reruns, filtrage par tests supplementaires selon framework", "evidence": "prouve"},
+    "sampling_budget": {
+      "temperature": null,
+      "top_p": null,
+      "seed": null,
+      "n_samples": null
+    },
+    "selection_policy": "a verifier"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": [
+        "issues GitHub publiques des repos cibles",
+        "code source des repos dans les corpus de train",
+        "patches de reference (golden patches) publics",
+        "mirror HuggingFace princeton-nlp/SWE-bench"
+      ],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": [
+        "historique de commits et PRs",
+        "discussions et commentaires d'issues",
+        "CI logs indexes",
+        "forks et distillations",
+        "blogs post-mortem de contributions"
+      ],
+      "evidence": "prouve"
+    },
+    "measures": ["validation humaine"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "SWE-bench Verified = curation humaine tierce one-shot sur un sous-ensemble; ne traite pas la contamination du code source ni le harness overfitting.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores SWE-bench sous meme subset (full/Lite/Verified), meme framework agent, meme budget de compute, meme snapshot modele, meme fenetre temporelle.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "Scores cross-frameworks (SWE-agent vs Agentless vs Devin), cross-subsets, cross-budgets; ni avec HumanEval/MBPP/LiveCodeBench (familles distinctes).",
+      "evidence": "prouve"
+    },
+    "family": "scaffolding_agent",
+    "axes_fixed": [],
+    "axes_missing": [
+      "framework agent",
+      "budget compute (tokens/retries/temps)",
+      "subset (full/Lite/Verified)",
+      "snapshot modele",
+      "politique de selection de patch",
+      "fenetre temporelle vs cutoff train"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "validateur externe"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Issues, repos, patches de reference et harness tous publics depuis 2023-10."
+      },
+      "contamination_direct": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Repos cibles dans les corpus de train de la plupart des LLMs; contamination structurelle non eliminable."
+      },
+      "contamination_indirect": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "PRs, commentaires, CI logs, forks et distillations tous indexes."
+      },
+      "incomparability": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Score depend autant du framework agent et du budget que du modele; aucun scaffolding canonique; 3 subsets distincts."
+      },
+      "gaming_surface": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Au moins 5 categories applicables (prompt tuning, format fitting, hill-climbing, harness overfitting, protocol fragmentation)."
+      },
+      "governance": {
+        "score": 1,
+        "evidence": "plausible",
+        "note": "SWE-bench Verified = curation humaine tierce one-shot; pas de mecanisme continu ni de rotation."
+      }
+    },
+    "derived_verdict": "inutilisable"
+  }
+}

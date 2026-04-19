@@ -1,0 +1,155 @@
+{
+  "status": {
+    "fiche_type": "pilote sans run",
+    "anchor_level": "hors ancrage",
+    "justification": "Pilote sans run convertissant `fiches/MBPP.md` en instance JSON v0.5. Second cas `code_static` apres HumanEval. Benchmark reclasse `inutilisable` (s=0, zeros=6): ~974 problemes debutant/intermediaire publics depuis 2021, contamination quasi-certaine, pass@k gonflable, subset sanitized vs full et shots variables cassent la comparabilite. Choix deliberemment d'un `k` integer canonique (1) pour exercer la branche integer du type union `scoring.sampling_budget.k`, complementaire a la branche string exercee par HumanEval (`1|10|100`)."
+  },
+  "identity": {
+    "benchmark": {"value": "MBPP", "evidence": "prouve"},
+    "version_release": {"value": "MBPP - Mostly Basic Python Programming (Austin et al., Google, 2021-08, arXiv 2108.07732, github.com/google-research/google-research/tree/master/mbpp)", "evidence": "prouve"},
+    "subset_split": {"value": "974 problemes Python (full) / ~427 problemes (subset sanitized); test split canonique = 500 items dans le papier original (indices 11-510)", "evidence": "prouve"},
+    "set_hash": {"value": null, "evidence": "a verifier"},
+    "run_date": {"value": null, "evidence": "a verifier"},
+    "operator": {"value": null, "evidence": "a verifier"}
+  },
+  "target": {
+    "main_signal": "competence",
+    "excluded_signals": ["preference", "scaffolding"],
+    "retry_agent_active": false,
+    "reclassement_applied": false,
+    "scaffold_description": null
+  },
+  "model": {
+    "name": {"value": null, "evidence": "a verifier"},
+    "snapshot": {"value": null, "evidence": "a verifier"},
+    "access_mode": "a verifier"
+  },
+  "harness": {
+    "version": {"value": "harness google-research/mbpp + reimplementations (EleutherAI lm-eval, bigcode-evaluation-harness, MBPP+ / EvalPlus)", "evidence": "prouve"},
+    "code_hash": {"value": null, "evidence": "a verifier"},
+    "backend": {"value": "generation de code a partir de l'enonce en langage naturel + assertions d'exemple, execution des assertions dans un sandbox Python", "evidence": "prouve"},
+    "timeouts_retries_batch": {"value": "variables selon reimplementation (timeout par item, taille de batch, nombre de samples non canonique; full vs sanitized change le denominateur)", "evidence": "prouve"}
+  },
+  "prompt_regime": {
+    "template": {"value": "enonce en langage naturel + 1 a 3 assertions d'exemple; pas de template unique impose", "evidence": "prouve"},
+    "shots": {"value": "variable (0-shot et 3-shot selon les implementations; le papier original utilise 3-shot)", "evidence": "prouve"},
+    "cot_status": "free",
+    "system_prompt": {"value": null, "evidence": "a verifier"},
+    "choice_order": {"value": "non applicable (pas de MCQ)", "evidence": "prouve"},
+    "prompt_sensitivity": {
+      "status": "declaree non mesuree",
+      "value": null
+    }
+  },
+  "scoring": {
+    "metric": {"value": "pass@k (principalement pass@1 dans l'usage leaderboard actuel; pass@80 dans le papier original)", "evidence": "prouve"},
+    "final_parser": {"value": "extraction du code genere, execution des assertions fournies dans l'item", "evidence": "prouve"},
+    "post_processing": {"value": "selection parmi n samples; pass@k = probabilite qu'au moins une completion sur k tires passe toutes les assertions", "evidence": "prouve"},
+    "sampling_budget": {
+      "temperature": "variable (0.2 usuel pour pass@1, ~0.8 pour pass@80; non canonique)",
+      "top_p": null,
+      "seed": null,
+      "n_samples": "variable (>=1 pour pass@1; >=200 pour estimateur pass@80 stable)",
+      "k": 1
+    },
+    "selection_policy": "pass@k"
+  },
+  "contamination": {
+    "direct_surfaces": {
+      "value": [
+        "974 problemes publics sur github.com/google-research/google-research/tree/master/mbpp depuis 2021-08",
+        "mirror HuggingFace google-research-datasets/mbpp",
+        "subset sanitized (~427) publie et largement re-publie",
+        "solutions de reference fournies dans le dataset lui-meme"
+      ],
+      "evidence": "prouve"
+    },
+    "indirect_surfaces": {
+      "value": [
+        "problemes Python debutant/intermediaire tres proches d'exercices classiques de cours en ligne, tutoriels, forums",
+        "overlap prouve avec corpus de train generalistes (The Stack, CodeParrot, etc.)",
+        "datasets derives (MBPP+, EvalPlus) qui reexposent les prompts",
+        "notebooks Kaggle, Colab, blog posts avec solutions"
+      ],
+      "evidence": "prouve"
+    },
+    "measures": ["aucune"]
+  },
+  "gaming": {
+    "applicable_categories": [
+      "contamination directe",
+      "contamination indirecte",
+      "prompt tuning",
+      "format fitting",
+      "hill-climbing leaderboard",
+      "harness overfitting",
+      "protocol fragmentation"
+    ],
+    "anti_gaming_measures": {
+      "value": "Aucune mesure anti-gaming cote benchmark d'origine: set public fige en 2021, subsets multiples non harmonises (full vs sanitized), pas de rotation, pas de validation humaine continue. MBPP+ ajoute des tests supplementaires mais ne traite ni la contamination ni l'inflation pass@k.",
+      "evidence": "prouve"
+    }
+  },
+  "comparability": {
+    "comparable_with": {
+      "value": "Uniquement d'autres scores MBPP sous meme subset (full/sanitized/test-split), meme k, meme temperature, meme n_samples, meme harness, meme snapshot modele.",
+      "evidence": "prouve"
+    },
+    "not_comparable_with": {
+      "value": "Scores cross-subset (full vs sanitized vs test-split), cross-k (pass@1 vs pass@80), cross-shots (0-shot vs 3-shot), cross-harness (mbpp vs MBPP+ vs lm-eval); ni avec HumanEval/LiveCodeBench/SWE-bench (objets distincts meme si famille proche).",
+      "evidence": "prouve"
+    },
+    "family": "code_static",
+    "axes_fixed": [],
+    "axes_missing": [
+      "subset utilise (full vs sanitized vs test-split 500)",
+      "k dans pass@k",
+      "temperature",
+      "n_samples",
+      "shots (0-shot vs 3-shot)",
+      "version harness",
+      "snapshot modele",
+      "politique de parsing du code genere"
+    ]
+  },
+  "publication_status": {
+    "published": ["schema tache", "set validation", "code eval", "fiche"],
+    "closed": ["aucune fermeture"],
+    "third_party_mechanism": "aucun"
+  },
+  "verdict": {
+    "dimensions": {
+      "closure": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "974 problemes, assertions et harness tous publics depuis 2021-08; subset sanitized egalement public; aucune partie fermee."
+      },
+      "contamination_direct": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Mirroring quasi-universel (GitHub Google Research, HuggingFace, forks); aucune decontamination cote benchmark."
+      },
+      "contamination_indirect": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Problemes de niveau debutant/intermediaire proches d'exercices Python classiques; overlap avec corpus de train quasi-garanti; datasets derives (MBPP+, EvalPlus) reexposent les prompts."
+      },
+      "incomparability": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Subset (full/sanitized/500), shots (0-shot vs 3-shot), k, temperature, n_samples, harness: tous divergents sans canon unique."
+      },
+      "gaming_surface": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Au moins 4 categories prouvees (prompt tuning, format fitting, harness overfitting, hill-climbing) plus contamination directe et indirecte."
+      },
+      "governance": {
+        "score": 0,
+        "evidence": "prouve",
+        "note": "Publie 2021-08 par Google Research, laisse en l'etat; aucun mecanisme continu, aucune rotation, aucun validateur externe."
+      }
+    },
+    "derived_verdict": "inutilisable"
+  }
+}
